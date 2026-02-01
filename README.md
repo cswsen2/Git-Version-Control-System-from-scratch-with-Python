@@ -1,48 +1,81 @@
-# Content-Addressable VCS Implementation (Python)
+# PyGit: Git Internals Implementation
 
-A fully functional, distributed **Version Control System (VCS)** built from scratch in Python.
+## Overview
+A simplified implementation of Git's core object model, built to deeply 
+understand version control internals. This project implements Git's 
+content-addressable storage, object model, and basic versioning operations.
 
-This project implements the core low-level architecture of Git, including **content-addressable storage**, **DAG (Directed Acyclic Graph)** history traversal, and reference management. It was built to demonstrate a deep understanding of file system internals, hashing algorithms, and data structure serialization.
+## What I Learned
+- **Content-addressable storage**: How SHA-1 hashing enables deduplication 
+  and integrity
+- **Merkle trees**: The commit → tree → blob hierarchy
+- **Immutable data structures**: Why Git objects never change
+- **Symbolic references**: How HEAD and branches work as pointers
 
-## 🚀 Overview
+## Architecture
 
-Unlike simple file copiers, this system uses a **Merkle Tree-like structure** to store snapshots efficiently. It replicates the internal "plumbing" of Git:
+[Insert your diagram here]
 
-* **Content-Addressable Storage:** Files are deduplicated and stored based on their SHA-1 hash.
-* **Object Database:** Custom binary serialization format using Zlib compression.
-* **Reference System:** Full support for Branches (`refs/heads`) and HEAD pointer management.
-* **Atomic Operations:** Staging area (Index) management and tree construction.
+## Implemented Features
+- ✅ Blob, tree, and commit objects
+- ✅ Staging area (index)
+- ✅ Branch creation and switching
+- ✅ Commit history traversal
+- ✅ Detached HEAD state
 
-## 🛠 Features
+## Comparison to Real Git
 
-* **`init`**: Initializes a new repository structure (`.mygit/objects`, `.mygit/refs`).
-* **`hash-object`**: Computes SHA-1 hashes and compresses data into blobs.
-* **`cat-file`**: Reads and decompresses binary objects from the database.
-* **`add`**: Updates the **Staging Area (Index)**, tracking file blobs.
-* **`write-tree`**: recursively builds **Tree Objects** representing the directory state.
-* **`commit`**: Creates **Commit Objects** linking to trees and parent commits (Linked List/DAG).
-* **`log`**: Traverses and displays the commit history graph.
-* **`branch`**: Creates new pointers (references) to specific commits.
-* **`checkout`**:
-    * Restores the working directory to a specific state.
-    * Handles **Detached HEAD** (checking out a hash).
-    * Handles **Attached HEAD** (checking out a branch and updating the pointer).
+### What's the Same
+- Object storage format (header + content)
+- SHA-1 hashing algorithm
+- Directory structure (.mygit/objects, .mygit/refs)
+- Branch pointer mechanism
 
-## 📂 Architecture
+### Simplified Decisions
+- Text-based index (Git uses binary format)
+- Human-readable timestamps (Git uses Unix timestamps)
+- Single-level directory support (Git handles nested directories)
+- No pack files or delta compression
 
-The system relies on four fundamental object types stored in `.mygit/objects`:
+### Not Implemented (Yet)
+- Distributed features (push/pull)
+- Merge and conflict resolution
+- Diff algorithms
+- Network protocol
+- Pack files
 
+## Usage
 
+\`\`\`bash
+# Initialize repository
+python mygit.py init
 
-1.  **Blob:** Stores the raw file content (compressed).
-2.  **Tree:** Represents a directory; maps filenames to Blobs or other Trees.
-3.  **Commit:** A wrapper object containing the Tree hash, author metadata, and Parent hash.
-4.  **Refs:** Text files in `.mygit/refs/heads/` that store pointers to the latest commit of a branch.
+# Stage a file
+python mygit.py add file.txt
 
-## 💻 Installation & Usage
+# Commit
+python mygit.py commit -m "Initial commit"
 
-### 1. Setup
-Clone this repository to your local machine:
-```bash
-git clone [https://github.com/yourusername/content-addressable-vcs-python.git](https://github.com/yourusername/content-addressable-vcs-python.git)
-cd content-addressable-vcs-python
+# Create branch
+python mygit.py branch feature
+
+# View history
+python mygit.py log
+\`\`\`
+
+## Testing
+
+\`\`\`bash
+pytest tests/
+\`\`\`
+
+## Future Enhancements
+1. Implement merge with conflict detection
+2. Add nested directory support
+3. Build web UI for visualization
+4. Add comprehensive diff functionality
+
+## References
+- [Pro Git Book - Git Internals](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain)
+- [Git Source Code](https://github.com/git/git)
+- [Mary Rose Cook's Gitlet](http://gitlet.maryrosecook.com/docs/gitlet.html)
