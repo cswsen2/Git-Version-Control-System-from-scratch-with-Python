@@ -74,8 +74,3 @@ pytest tests/
 2. Add nested directory support
 3. Build web UI for visualization
 4. Add comprehensive diff functionality
-
-## References
-- [Pro Git Book - Git Internals](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain)
-- [Git Source Code](https://github.com/git/git)
-- [Mary Rose Cook's Gitlet](http://gitlet.maryrosecook.com/docs/gitlet.html)
